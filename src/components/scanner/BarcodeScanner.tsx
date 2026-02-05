@@ -1,10 +1,12 @@
  import { useState, useEffect, useRef, useCallback } from 'react';
  import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
-import { X, SwitchCamera, Flashlight, FlashlightOff, Scan, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { X, SwitchCamera, Flashlight, FlashlightOff, Scan, AlertCircle, CheckCircle2, CameraOff } from 'lucide-react';
  import { Button } from '@/components/ui/button';
  import { cn } from '@/lib/utils';
  import { playSuccessSound } from '@/lib/scan-sound';
 import { Badge } from '@/components/ui/badge';
+import { Capacitor } from '@capacitor/core';
+import { Camera } from '@capacitor/camera';
  
  interface BarcodeScannerProps {
    open: boolean;
@@ -39,8 +41,38 @@ export function BarcodeScanner({
    const startInProgressRef = useRef(false);
    const cooldownTimerRef = useRef<number | null>(null);
  
+   const requestCameraPermission = async (): Promise<boolean> => {
+     if (Capacitor.isNativePlatform()) {
+       try {
+         // For native platforms, use Capacitor Camera plugin
+         const permission = await Camera.requestPermissions({ permissions: ['camera'] });
+         return permission.camera === 'granted';
+       } catch (error) {
+         console.error('Camera permission error:', error);
+         return false;
+       }
+     } else {
+       // For web, check browser permissions
+       try {
+         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+         stream.getTracks().forEach(track => track.stop());
+         return true;
+       } catch (error) {
+         console.error('Web camera permission error:', error);
+         return false;
+       }
+     }
+   };
+
    const startScanner = useCallback(async () => {
      if (!containerRef.current) return;
+
+     // Check and request camera permission first
+     const hasPermission = await requestCameraPermission();
+     if (!hasPermission) {
+       setError('Camera permission denied. Please allow camera access in settings.');
+       return;
+     }
 
      // Prevent overlapping start calls (can create multiple scanner instances and lost references)
      if (startInProgressRef.current) return;
@@ -168,14 +200,15 @@ export function BarcodeScanner({
        } catch (e) {
          setHasFlash(false);
        }
-     } catch (err: any) {
+     } catch (err: unknown) {
        console.error('Scanner error:', err);
-       if (err.message?.includes('Permission')) {
-         setError('Camera permission denied. Please allow camera access.');
-       } else if (err.message?.includes('NotFoundError') || err.message?.includes('not found')) {
+       const error = err as Error;
+       if (error.message?.includes('Permission')) {
+         setError('Camera permission denied. Please allow camera access in your device settings.');
+       } else if (error.message?.includes('NotFoundError') || error.message?.includes('not found')) {
          setError('No camera found on this device.');
        } else {
-         setError(err.message || 'Failed to start camera');
+         setError(error.message || 'Failed to start camera. Please check permissions and try again.');
        }
       } finally {
         startInProgressRef.current = false;
@@ -296,12 +329,38 @@ export function BarcodeScanner({
              </div>
              <p className="text-white text-lg font-semibold mb-2">Camera Error</p>
              <p className="text-white/70 text-sm mb-6 max-w-xs mx-auto">{error}</p>
-             <Button
-               onClick={startScanner}
-               className="rounded-2xl h-12 px-6 bg-white text-black hover:bg-white/90 touch-feedback"
-             >
-               Try Again
-             </Button>
+             <div className="flex flex-col gap-3">
+               <Button
+                 onClick={startScanner}
+                 className="rounded-2xl h-12 px-6 bg-white text-black hover:bg-white/90 touch-feedback"
+               >
+                 Try Again
+               </Button>
+               {error?.includes('permission') && (
+                 <Button
+                   variant="outline"
+                   onClick={async () => {
+                     if (Capacitor.isNativePlatform()) {
+                       // Open app settings on native platforms
+                       try {
+                         await Camera.requestPermissions({ permissions: ['camera'] });
+                         startScanner();
+                       } catch (e) {
+                         // Fallback to manual settings instructions
+                         alert('Please go to Settings > Apps > SmartInventoryPro > Permissions > Camera to enable camera access');
+                       }
+                     } else {
+                       // For web, try again
+                       startScanner();
+                     }
+                   }}
+                   className="rounded-2xl h-12 px-6 border-white text-white hover:bg-white/10 touch-feedback"
+                 >
+                   <CameraOff className="w-5 h-5 mr-2" />
+                   Request Permission
+                 </Button>
+               )}
+             </div>
            </div>
          ) : (
            <>
