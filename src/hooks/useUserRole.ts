@@ -10,6 +10,11 @@ export function useUserRole() {
     queryFn: async () => {
       if (!user?.id) return null;
       
+      // Check if this is the designated admin user
+      if (user.email === 'mdismail.opm@gmail.com') {
+        return 'admin';
+      }
+      
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
@@ -28,7 +33,7 @@ export function useUserRole() {
 
   return {
     role: role || 'member',
-    isAdmin: role === 'admin',
+    isAdmin: role === 'admin' || user?.email === 'mdismail.opm@gmail.com',
     isLoading,
   };
 }

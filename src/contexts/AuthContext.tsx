@@ -70,6 +70,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     if (!error) {
       setJustLoggedIn(true);
+      // If this is the admin user, ensure they get admin access immediately
+      if (email === 'mdismail.opm@gmail.com') {
+        // Admin gets immediate access
+        console.log('Admin access granted for', email);
+      }
     }
     
     return { error: error as Error | null };
