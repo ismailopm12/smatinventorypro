@@ -1,0 +1,274 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Modern Native Mobile Design System */
+/* All colors in HSL format */
+
+@layer base {
+  :root {
+    /* Clean, vibrant palette */
+    --background: 220 20% 97%;
+    --foreground: 220 25% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 10%;
+
+    /* Vibrant blue primary */
+    --primary: 220 90% 56%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 15% 93%;
+    --secondary-foreground: 220 25% 10%;
+
+    --muted: 220 15% 91%;
+    --muted-foreground: 220 12% 45%;
+
+    --accent: 220 15% 93%;
+    --accent-foreground: 220 25% 10%;
+
+    /* Status colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 152 76% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 95% 52%;
+    --warning-foreground: 0 0% 0%;
+
+    --info: 200 95% 50%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 220 90% 56%;
+
+    --radius: 0.75rem;
+
+    /* Bottom navigation */
+    --nav-background: 0 0% 100%;
+    --nav-active: 220 90% 56%;
+    --nav-inactive: 220 12% 55%;
+
+    /* Chart colors */
+    --chart-1: 220 90% 56%;
+    --chart-2: 152 76% 40%;
+    --chart-3: 38 95% 52%;
+    --chart-4: 200 95% 50%;
+    --chart-5: 280 80% 58%;
+
+    --sidebar-background: 220 20% 97%;
+    --sidebar-foreground: 220 12% 45%;
+    --sidebar-primary: 220 90% 56%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 15% 93%;
+    --sidebar-accent-foreground: 220 25% 10%;
+    --sidebar-border: 220 15% 88%;
+    --sidebar-ring: 220 90% 56%;
+  }
+
+  .dark {
+    --background: 220 25% 6%;
+    --foreground: 220 15% 95%;
+
+    --card: 220 25% 10%;
+    --card-foreground: 220 15% 95%;
+
+    --popover: 220 25% 10%;
+    --popover-foreground: 220 15% 95%;
+
+    --primary: 220 85% 60%;
+    --primary-foreground: 220 25% 6%;
+
+    --secondary: 220 20% 18%;
+    --secondary-foreground: 220 15% 95%;
+
+    --muted: 220 20% 16%;
+    --muted-foreground: 220 12% 60%;
+
+    --accent: 220 20% 18%;
+    --accent-foreground: 220 15% 95%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 152 70% 48%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 95% 52%;
+    --warning-foreground: 0 0% 0%;
+
+    --info: 200 90% 58%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 220 20% 18%;
+    --input: 220 20% 18%;
+    --ring: 220 85% 60%;
+
+    --nav-background: 220 25% 10%;
+    --nav-active: 220 85% 60%;
+    --nav-inactive: 220 12% 55%;
+
+    --chart-1: 220 85% 60%;
+    --chart-2: 152 70% 48%;
+    --chart-3: 38 95% 52%;
+    --chart-4: 200 90% 58%;
+    --chart-5: 280 80% 58%;
+
+    --sidebar-background: 220 25% 6%;
+    --sidebar-foreground: 220 15% 95%;
+    --sidebar-primary: 220 85% 60%;
+    --sidebar-primary-foreground: 220 25% 6%;
+    --sidebar-accent: 220 20% 18%;
+    --sidebar-accent-foreground: 220 15% 95%;
+    --sidebar-border: 220 20% 18%;
+    --sidebar-ring: 220 85% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'SF Pro Display', 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Mobile app-like scrolling */
+  html {
+    @apply scroll-smooth;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Hide scrollbar for mobile-like experience */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  /* Safe area insets for mobile devices */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .mb-safe {
+    margin-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+
+  /* Touch feedback */
+  .touch-feedback {
+    @apply active:scale-[0.98] transition-transform duration-100;
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-background/80 backdrop-blur-xl;
+  }
+
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50 shadow-xl shadow-primary/5;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
+  }
+
+  /* Smooth card hover */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  /* Native-like active states */
+  .native-active {
+    @apply active:bg-muted/80 transition-colors duration-75;
+  }
+
+  /* Shimmer loading effect */
+  .shimmer {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent;
+  }
+}
+
+@layer components {
+  /* Native button styles */
+  .btn-native {
+    @apply rounded-2xl font-semibold transition-all duration-200 active:scale-[0.97] shadow-lg;
+  }
+
+  /* Native card styles */
+  .card-native {
+    @apply rounded-2xl border-0 shadow-lg shadow-foreground/5 bg-card;
+  }
+
+  /* Native input styles */
+  .input-native {
+    @apply h-12 rounded-xl bg-muted/50 border-0 px-4 focus-visible:ring-2 focus-visible:ring-primary transition-all;
+  }
+
+  /* Floating action button */
+  .fab {
+    @apply fixed bottom-24 right-4 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-2xl shadow-primary/40 flex items-center justify-center active:scale-95 transition-transform z-50;
+  }
+
+  /* Status badge styles */
+  .badge-success {
+    @apply bg-success/15 text-success border border-success/20 font-medium;
+  }
+
+  .badge-warning {
+    @apply bg-warning/15 text-warning border border-warning/20 font-medium;
+  }
+
+  .badge-destructive {
+    @apply bg-destructive/15 text-destructive border border-destructive/20 font-medium;
+  }
+
+  .badge-info {
+    @apply bg-info/15 text-info border border-info/20 font-medium;
+  }
+}
+
+/* Custom keyframes */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}

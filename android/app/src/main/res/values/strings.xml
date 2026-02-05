@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">A Lovable project</string>
+    <string name="title_activity_main">A Lovable project</string>
+    <string name="package_name">app.lovable.df2926bd6e8c4998a66c7b51ca8e3699</string>
+    <string name="custom_url_scheme">app.lovable.df2926bd6e8c4998a66c7b51ca8e3699</string>
+</resources>
